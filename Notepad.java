@@ -3,13 +3,7 @@ import java.awt.*;
 
 public class Notepad {
 
-    /*
-        classes:
-        Notepad() - main
-        menuBar
-    */
     private JFrame jfrm;
-
 
     public Notepad(){
         jfrm = new JFrame ("Untitled-Notepad");
@@ -19,6 +13,8 @@ public class Notepad {
 
         NotepadMenuBar menuBar = new NotepadMenuBar(jfrm);
         jfrm.setJMenuBar(menuBar.getNotepadMenu());
+
+        TextArea txtArea = new TextArea(jfrm);
 
 
         jfrm.setLocationRelativeTo(null);
