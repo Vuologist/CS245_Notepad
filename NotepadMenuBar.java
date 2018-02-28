@@ -1,24 +1,33 @@
 import javax.swing.*;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.io.File;
 
 public class NotepadMenuBar {
 
     private JMenuBar jmb;
     private JFrame jfrm;
     private JFileChooser jfc;
+    private TextArea txtArea;
 
-    public NotepadMenuBar(JFrame jfrm){
+    public NotepadMenuBar(JFrame jfrm, TextArea textArea){
         this.jfrm = jfrm;
+        txtArea = textArea;
         jmb = new JMenuBar();
         jmb.add(fileMenu());
         jmb.add(editMenu());
         jmb.add(formatMenu());
-
-
+        jmb.add(viewMenu());
+        jmb.add(helpMenu());
     }
 
     public JMenuBar getNotepadMenu(){
         return jmb;
+    }
+
+    private void saveChanges(){
+        JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to Untitled?",
+                "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
     }
 
     private JMenu fileMenu (){
@@ -48,12 +57,19 @@ public class NotepadMenuBar {
         });
 
         jmiOpen.addActionListener(ae -> {
+            if (!txtArea.isEmpty()) {
+                saveChanges();
+            }
             int result = jfc.showOpenDialog(null);
             if(result == JFileChooser.APPROVE_OPTION){
-                System.out.println("Selected file is: " + jfc.getSelectedFile().getAbsolutePath());
+                File file = jfc.getSelectedFile();
+                if(file.getName().endsWith(".java") || file.getName().endsWith(".txt")) {
+                    txtArea.loadFile(file);
+                }else {
+                    JOptionPane.showMessageDialog(jfrm, "File is not .txt or .java!!", "Error", JOptionPane.WARNING_MESSAGE);
+                }
             } else
                 System.out.println("nothing selected");
-
         });
 
         jmiSave.addActionListener(ae -> {
@@ -61,7 +77,18 @@ public class NotepadMenuBar {
         });
 
         jmiSaveAs.addActionListener(ae -> {
+            //need to check for overwriting
+            jfc.setApproveButtonText("Save");
+            int result = jfc.showOpenDialog(null);
+            if(result != jfc.APPROVE_OPTION){
+                return;
+            }
 
+            File file = jfc.getSelectedFile();
+             if(!file.getName().endsWith(".txt")){
+                 file = new File(file.getAbsolutePath() + ".txt");
+             }
+            txtArea.saveFile(file);
         });
 
         jmiExit.addActionListener(ae -> {
@@ -94,7 +121,7 @@ public class NotepadMenuBar {
         JMenuItem jmiPaste = new JMenuItem("Paste");
         jmiPaste.setAccelerator(KeyStroke.getKeyStroke('V', InputEvent.CTRL_DOWN_MASK));
         JMenuItem jmiDelete = new JMenuItem("Delete");
-//        jmiDelete.setAccelerator(KeyStroke.getKeyStroke(InputEvent.));
+        jmiDelete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0)); //change so that it is Del instead of Delete
         //section three
         JMenuItem jmiFind = new JMenuItem("Find...");
         jmiFind.setAccelerator(KeyStroke.getKeyStroke('F', InputEvent.CTRL_DOWN_MASK));
@@ -107,7 +134,7 @@ public class NotepadMenuBar {
         JMenuItem jmiSelectAll = new JMenuItem("Select All");
         jmiSelectAll.setAccelerator(KeyStroke.getKeyStroke('A', InputEvent.CTRL_DOWN_MASK));
         JMenuItem jmiTimeDate = new JMenuItem("Time/Date");
-//        jmiTimeDate.setAccelerator(KeyStroke.getKeyStroke());
+        jmiTimeDate.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
 
         jmEdit.add(jmiUndo);
         jmEdit.addSeparator();
@@ -120,6 +147,7 @@ public class NotepadMenuBar {
         jmEdit.add(jmiFindNext);
         jmEdit.add(jmiReplace);
         jmEdit.add(jmiGoTo);
+        jmEdit.addSeparator();
         jmEdit.add(jmiSelectAll);
         jmEdit.add(jmiTimeDate);
 
@@ -140,8 +168,28 @@ public class NotepadMenuBar {
     }
 
     private JMenu viewMenu () {
+        JMenu jmView = new JMenu("View");
+        jmView.setMnemonic('V');
 
+        JMenuItem jmiStatusBar = new JMenuItem("Status Bar", 'S');
+        jmView.add(jmiStatusBar);
+
+        return jmView;
     }
 
+    private JMenu helpMenu(){
+        JMenu jmHelp = new JMenu("Help");
+        jmHelp.setMnemonic('H');
+
+        JMenuItem jmiViewHelp = new JMenuItem("View Help",'H');
+        JMenuItem jmiAboutJNotepad = new JMenuItem("About JNotepad");
+
+
+        jmHelp.add(jmiViewHelp);
+        jmHelp.addSeparator();
+        jmHelp.add(jmiAboutJNotepad);
+
+        return jmHelp;
+    }
 
 }

@@ -11,10 +11,9 @@ public class Notepad {
         jfrm.setLayout(new BorderLayout());
         jfrm.setDefaultCloseOperation(jfrm.EXIT_ON_CLOSE);
 
-        NotepadMenuBar menuBar = new NotepadMenuBar(jfrm);
-        jfrm.setJMenuBar(menuBar.getNotepadMenu());
-
         TextArea txtArea = new TextArea(jfrm);
+        NotepadMenuBar menuBar = new NotepadMenuBar(jfrm, txtArea);
+        jfrm.setJMenuBar(menuBar.getNotepadMenu());
 
 
         jfrm.setLocationRelativeTo(null);
