@@ -15,6 +15,8 @@ public class EditMenuBar {
     private JMenuItem jmiFindNext;
     private JMenuItem jmiReplace;
     private JMenuItem jmiGoTo;
+    private JMenuItem jmiSelectAll;
+    private JMenuItem jmiTimeDate;
 
 
     public EditMenuBar(){
@@ -58,9 +60,9 @@ public class EditMenuBar {
     }
 
     private void createJMenuItemSection4(){
-        JMenuItem jmiSelectAll = new JMenuItem("Select All");
+        jmiSelectAll = new JMenuItem("Select All");
         jmiSelectAll.setAccelerator(KeyStroke.getKeyStroke('A', InputEvent.CTRL_DOWN_MASK));
-        JMenuItem jmiTimeDate = new JMenuItem("Time/Date");
+        jmiTimeDate = new JMenuItem("Time/Date");
         jmiTimeDate.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
     }
 
