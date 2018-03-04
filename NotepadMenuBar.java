@@ -5,10 +5,10 @@ import java.io.File;
 
 public class NotepadMenuBar {
 
-    private JMenuBar jmb;
-    private JFrame jfrm;
-    private JFileChooser jfc;
-    private TextArea txtArea;
+    protected JMenuBar jmb;
+    protected JFrame jfrm;
+    protected JFileChooser jfc;
+    protected TextArea txtArea;
 
     public NotepadMenuBar(JFrame jfrm, TextArea textArea){
         this.jfrm = jfrm;

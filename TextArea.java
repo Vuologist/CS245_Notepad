@@ -13,31 +13,4 @@ public class TextArea {
 
     }
 
-    public boolean isEmpty() {
-        return (textArea.getText() == null || textArea.getText().equals("")) ? true : false;
-    }
-
-    public void loadFile(File file){
-        try{
-            BufferedReader input = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(file)));
-            textArea.read(input,null);
-            input.close();
-            textArea.revalidate();
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void saveFile(File file){
-        try {
-            BufferedWriter outFile = new BufferedWriter(new FileWriter(file));
-
-            textArea.write(outFile);
-            outFile.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
 }

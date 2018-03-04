@@ -12,7 +12,7 @@ public class Notepad {
         jfrm.setDefaultCloseOperation(jfrm.EXIT_ON_CLOSE);
 
         TextArea txtArea = new TextArea(jfrm);
-        NotepadMenuBar menuBar = new NotepadMenuBar(jfrm, txtArea);
+        NotepadMenuBarFunctionality menuBar = new NotepadMenuBarFunctionality(jfrm, txtArea);
         jfrm.setJMenuBar(menuBar.getNotepadMenu());
 
 
