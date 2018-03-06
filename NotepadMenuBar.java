@@ -1,13 +1,12 @@
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.File;
+import java.awt.event.WindowEvent;
 
-public class NotepadMenuBar {
+public class NotepadMenuBar extends NotepadMenuBarFunctionality{
 
     protected JMenuBar jmb;
     protected JFrame jfrm;
-    protected JFileChooser jfc;
     protected TextArea txtArea;
 
     public NotepadMenuBar(JFrame jfrm, TextArea textArea){
@@ -23,11 +22,6 @@ public class NotepadMenuBar {
 
     public JMenuBar getNotepadMenu(){
         return jmb;
-    }
-
-    private void saveChanges(){
-        JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to Untitled?",
-                "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
     }
 
     private JMenu fileMenu (){
@@ -51,25 +45,11 @@ public class NotepadMenuBar {
         JMenuItem jmiExit = new JMenuItem("Exit",'x');
 
         jmiNew.addActionListener(ae ->{
-            //change changes to ____ to file name
-            JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to Untitled?",
-                    "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
+            newMenuOption();
         });
 
         jmiOpen.addActionListener(ae -> {
-            if (!txtArea.isEmpty()) {
-                saveChanges();
-            }
-            int result = jfc.showOpenDialog(null);
-            if(result == JFileChooser.APPROVE_OPTION){
-                File file = jfc.getSelectedFile();
-                if(file.getName().endsWith(".java") || file.getName().endsWith(".txt")) {
-                    txtArea.loadFile(file);
-                }else {
-                    JOptionPane.showMessageDialog(jfrm, "File is not .txt or .java!!", "Error", JOptionPane.WARNING_MESSAGE);
-                }
-            } else
-                System.out.println("nothing selected");
+            openMenuOption();
         });
 
         jmiSave.addActionListener(ae -> {
@@ -77,22 +57,18 @@ public class NotepadMenuBar {
         });
 
         jmiSaveAs.addActionListener(ae -> {
-            //need to check for overwriting
-            jfc.setApproveButtonText("Save");
-            int result = jfc.showOpenDialog(null);
-            if(result != jfc.APPROVE_OPTION){
-                return;
-            }
-
-            File file = jfc.getSelectedFile();
-             if(!file.getName().endsWith(".txt")){
-                 file = new File(file.getAbsolutePath() + ".txt");
-             }
-            txtArea.saveFile(file);
+            saveAsMenuOption();
         });
 
         jmiExit.addActionListener(ae -> {
-                System.exit(10);
+                exitMenuOption();
+        });
+
+        jfrm.addWindowListener(new java.awt.event.WindowAdapter(){
+            public void windowClosing(WindowEvent winEvt) {
+                exitMenuOption();
+                System.exit(0);
+            }
         });
 
         jmFile.add(jmiNew);
