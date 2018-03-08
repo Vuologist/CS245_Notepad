@@ -27,8 +27,6 @@ public class NotepadMenuBar {
     }
 
     private JMenu fileMenu (){
-        JFileChooser jfc = new JFileChooser();
-
         JMenu jmFile = new JMenu("File");
         jmFile.setMnemonic('F');
         //first section
@@ -171,48 +169,44 @@ public class NotepadMenuBar {
 
     //////////////////////////////////// functionality begins
 
-    protected boolean isEmpty() {
+    private boolean isEmpty() {
         return txtArea.getText().trim().length() == 0 ? true : false;
-        //return true;
     }
 
-    protected void loadFile(File file){
-        try{
-            BufferedReader input = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(file)));
-            txtArea.read(input,null);
-            jfrm.setTitle(file.getName());
-            input.close();
-            txtArea.revalidate();
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    protected void saveFile(File file){
-        try {
-            BufferedWriter outFile = new BufferedWriter(new FileWriter(file));
-
-            txtArea.write(outFile);
-            outFile.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    protected void newMenuOption(){
-        //change changes to ____ to file name
+    private void newMenuOption(){
+        int response = JOptionPane.CANCEL_OPTION;
         if(!isEmpty()){
-            System.out.print("nothing in text area");
-        }else{
-            JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to Untitled?",
+            response = JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to Untitled?",
                     "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
-
+            if(response == JOptionPane.YES_OPTION){
+                //save file
+                txtArea.setText("");
+            }
         }
-
     }
 
-    protected void openMenuOption(){
+    private void loadFile(File file){
+        int response = JOptionPane.CANCEL_OPTION;
+        if(!isEmpty()){
+            response = JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to " + jfrm.getTitle() + "?",
+                    "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
+        }
+
+        if(response == JOptionPane.YES_OPTION){
+            try{
+                BufferedReader input = new BufferedReader(new InputStreamReader(
+                        new FileInputStream(file)));
+                txtArea.read(input,null);
+                jfrm.setTitle(file.getName());
+                input.close();
+                txtArea.revalidate();
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void openMenuOption(){
         if (!isEmpty()) {
             saveChanges();
         }
@@ -234,7 +228,7 @@ public class NotepadMenuBar {
                 "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
     }
 
-    protected void saveAsMenuOption(){
+    private void saveAsMenuOption(){
         //need to check for overwriting
         jfc.setApproveButtonText("Save");
         int result = jfc.showOpenDialog(null);
@@ -249,7 +243,18 @@ public class NotepadMenuBar {
         saveFile(file);
     }
 
-    protected void exitMenuOption(){
+    private void saveFile(File file){
+        try {
+            BufferedWriter outFile = new BufferedWriter(new FileWriter(file));
+
+            txtArea.write(outFile);
+            outFile.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void exitMenuOption(){
         System.out.println("exit caught");
     }
     
