@@ -17,4 +17,7 @@ public class TextArea {
 
     public String getFileName(){return fileName;}
 
+    public JTextArea getTextArea() {
+        return textArea;
+    }
 }
