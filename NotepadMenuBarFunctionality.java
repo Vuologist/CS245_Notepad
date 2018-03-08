@@ -8,8 +8,15 @@ public class NotepadMenuBarFunctionality{
     private JFrame jfrm;
     protected JFileChooser jfc;
 
+    public NotepadMenuBarFunctionality (JFrame jfrm, JTextArea textArea){
+        super(jfrm, textArea);
+        this.jfrm = jfrm;
+        txtArea = textArea;
+    }
+
     protected boolean isEmpty() {
-        return (txtArea.getClass() == null || txtArea.getText().equals("")) ? true : false;
+        return txtArea.getText().trim().length() == 0 ? true : false;
+        //return true;
     }
 
     protected void loadFile(File file){
@@ -17,6 +24,7 @@ public class NotepadMenuBarFunctionality{
             BufferedReader input = new BufferedReader(new InputStreamReader(
                     new FileInputStream(file)));
             txtArea.read(input,null);
+            jfrm.setTitle(file.getName());
             input.close();
             txtArea.revalidate();
         }catch (Exception e) {
@@ -51,6 +59,7 @@ public class NotepadMenuBarFunctionality{
         if (!isEmpty()) {
             saveChanges();
         }
+        jfc = new JFileChooser();
         int result = jfc.showOpenDialog(null);
         if(result == JFileChooser.APPROVE_OPTION){
             File file = jfc.getSelectedFile();

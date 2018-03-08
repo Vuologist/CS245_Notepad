@@ -53,7 +53,7 @@ public class NotepadMenuBar extends NotepadMenuBarFunctionality{
         });
 
         jmiSave.addActionListener(ae -> {
-
+            //add code
         });
 
         jmiSaveAs.addActionListener(ae -> {
@@ -61,7 +61,7 @@ public class NotepadMenuBar extends NotepadMenuBarFunctionality{
         });
 
         jmiExit.addActionListener(ae -> {
-                exitMenuOption();
+            exitMenuOption();
         });
 
         jfrm.addWindowListener(new java.awt.event.WindowAdapter(){
@@ -159,7 +159,6 @@ public class NotepadMenuBar extends NotepadMenuBarFunctionality{
 
         JMenuItem jmiViewHelp = new JMenuItem("View Help",'H');
         JMenuItem jmiAboutJNotepad = new JMenuItem("About JNotepad");
-
 
         jmHelp.add(jmiViewHelp);
         jmHelp.addSeparator();
