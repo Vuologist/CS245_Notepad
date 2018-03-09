@@ -179,7 +179,9 @@ public class NotepadMenuBar {
             response = JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to Untitled?",
                     "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
             if(response == JOptionPane.YES_OPTION){
-                //save file
+                saveDoesAll();
+                txtArea.setText("");
+            } else if (response == JOptionPane.NO_OPTION){
                 txtArea.setText("");
             }
         }
@@ -190,9 +192,15 @@ public class NotepadMenuBar {
         if(!isEmpty()){
             response = JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to " + jfrm.getTitle() + "?",
                     "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
+            if(response == JOptionPane.YES_OPTION){
+                saveDoesAll();
+                txtArea.setText("");
+            } else if (response == JOptionPane.NO_OPTION){
+                //just clear and load in new file
+            }
         }
 
-        if(response == JOptionPane.YES_OPTION){
+        if(response==JOptionPane.YES_OPTION || response==JOptionPane.NO_OPTION){
             try{
                 BufferedReader input = new BufferedReader(new InputStreamReader(
                         new FileInputStream(file)));
@@ -208,7 +216,8 @@ public class NotepadMenuBar {
 
     private void openMenuOption(){
         if (!isEmpty()) {
-            saveChanges();
+            JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to Untitled?",
+                    "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
         }
         jfc = new JFileChooser();
         int result = jfc.showOpenDialog(null);
@@ -223,13 +232,15 @@ public class NotepadMenuBar {
             System.out.println("nothing selected");
     }
 
-    private void saveChanges(){
-        JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to Untitled?",
-                "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
-    }
-
     private void saveAsMenuOption(){
         //need to check for overwriting
+
+
+        saveDoesAll();
+    }
+
+    private void saveDoesAll(){
+        jfc = new JFileChooser();
         jfc.setApproveButtonText("Save");
         int result = jfc.showOpenDialog(null);
         if(result != jfc.APPROVE_OPTION){
@@ -237,13 +248,21 @@ public class NotepadMenuBar {
         }
 
         File file = jfc.getSelectedFile();
+
+        if (file.exists()) {
+            int response = JOptionPane.showConfirmDialog(null,
+                    "Do you want to replace the existing file?",
+                    "Confirm", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+            if (response != JOptionPane.YES_OPTION) {
+                return;
+            }
+        }
+
         if(!file.getName().endsWith(".txt")){
             file = new File(file.getAbsolutePath() + ".txt");
         }
-        saveFile(file);
-    }
 
-    private void saveFile(File file){
         try {
             BufferedWriter outFile = new BufferedWriter(new FileWriter(file));
 
@@ -255,6 +274,7 @@ public class NotepadMenuBar {
     }
 
     private void exitMenuOption(){
+        //might want to do stuff here
         System.out.println("exit caught");
     }
     
