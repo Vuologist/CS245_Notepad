@@ -8,12 +8,12 @@ public class NotepadMenuBar {
 
     private JMenuBar jmb;
     private JFrame jfrm;
-    private JTextArea txtArea;
+    private TextArea txtArea;
     private JFileChooser jfc;
 
     public NotepadMenuBar(JFrame jfrm, TextArea textArea){
         this.jfrm = jfrm;
-        txtArea = textArea.getTextArea();
+        txtArea = textArea;
         jmb = new JMenuBar();
         jmb.add(fileMenu());
         jmb.add(editMenu());
@@ -170,7 +170,7 @@ public class NotepadMenuBar {
     //////////////////////////////////// functionality begins
 
     private boolean isEmpty() {
-        return txtArea.getText().trim().length() == 0 ? true : false;
+        return txtArea.getTextArea().getText().trim().length() == 0 ? true : false;
     }
 
     private void newMenuOption(){
@@ -180,56 +180,53 @@ public class NotepadMenuBar {
                     "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
             if(response == JOptionPane.YES_OPTION){
                 saveDoesAll();
-                txtArea.setText("");
+                txtArea.getTextArea().setText("");
             } else if (response == JOptionPane.NO_OPTION){
-                txtArea.setText("");
-            }
-        }
-    }
-
-    private void loadFile(File file){
-        int response = JOptionPane.CANCEL_OPTION;
-        if(!isEmpty()){
-            response = JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to " + jfrm.getTitle() + "?",
-                    "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
-            if(response == JOptionPane.YES_OPTION){
-                saveDoesAll();
-                txtArea.setText("");
-            } else if (response == JOptionPane.NO_OPTION){
-                //just clear and load in new file
-            }
-        }
-
-        if(response==JOptionPane.YES_OPTION || response==JOptionPane.NO_OPTION){
-            try{
-                BufferedReader input = new BufferedReader(new InputStreamReader(
-                        new FileInputStream(file)));
-                txtArea.read(input,null);
-                jfrm.setTitle(file.getName());
-                input.close();
-                txtArea.revalidate();
-            }catch (Exception e) {
-                e.printStackTrace();
+                txtArea.getTextArea().setText("");
             }
         }
     }
 
     private void openMenuOption(){
-        if (!isEmpty()) {
-            JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to Untitled?",
+        int response = JOptionPane.YES_OPTION;
+        if(!isEmpty() || txtArea.isChanged()){
+            response = JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to " + jfrm.getTitle() + "?",
                     "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
+            if(response == JOptionPane.YES_OPTION){
+                saveDoesAll();
+                txtArea.getTextArea().setText("");
+            } else if (response == JOptionPane.NO_OPTION){
+                txtArea.getTextArea().setText("");
+                response = JOptionPane.YES_OPTION;
+            }else {
+                return;
+            }
         }
+
         jfc = new JFileChooser();
         int result = jfc.showOpenDialog(null);
         if(result == JFileChooser.APPROVE_OPTION){
             File file = jfc.getSelectedFile();
             if(file.getName().endsWith(".java") || file.getName().endsWith(".txt")) {
-                loadFile(file);
+                loadFileForOpenMenu(file);
             }else {
                 JOptionPane.showMessageDialog(jfrm, "File is not .txt or .java!!", "Error", JOptionPane.WARNING_MESSAGE);
             }
         } else
             System.out.println("nothing selected");
+    }
+
+    private void loadFileForOpenMenu(File file){
+        try{
+            BufferedReader input = new BufferedReader(new InputStreamReader(
+                    new FileInputStream(file)));
+            txtArea.getTextArea().read(input,null);
+            jfrm.setTitle(file.getName());
+            input.close();
+            txtArea.getTextArea().revalidate();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void saveAsMenuOption(){
@@ -266,7 +263,7 @@ public class NotepadMenuBar {
         try {
             BufferedWriter outFile = new BufferedWriter(new FileWriter(file));
 
-            txtArea.write(outFile);
+            txtArea.getTextArea().write(outFile);
             outFile.close();
         } catch (IOException ex) {
             ex.printStackTrace();
