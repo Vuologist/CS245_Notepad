@@ -21,6 +21,7 @@ public class ViewMenuBar {
 
     private void viewMenuItems () {
         JMenuItem jmiStatusBar = new JMenuItem("Status Bar", 'S');
+        jmiStatusBar.setEnabled(false);
         viewJM.add(jmiStatusBar);
     }
 

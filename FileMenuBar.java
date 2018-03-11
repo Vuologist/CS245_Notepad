@@ -1,7 +1,6 @@
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.io.*;
 
@@ -9,17 +8,18 @@ public class FileMenuBar {
 
     private JFrame jfrm;
     private TextArea txtArea;
+    private String oldTextArea;
     private JFileChooser jfc;
     private JMenu fileJM;
 
     public FileMenuBar(JFrame jfrm, TextArea txtArea){
         this.jfrm = jfrm;
         this.txtArea = txtArea;
+        oldTextArea = "";
         fileJM = new JMenu("File");
         fileJM.setMnemonic('F');
 
         fileMenuItems();
-
     }
 
     public JMenu getFileJM() {
@@ -86,6 +86,16 @@ public class FileMenuBar {
         return txtArea.getTextArea().getText().trim().length() == 0 ? true : false;
     }
 
+    private void saveOld(){
+        oldTextArea = txtArea.getTextArea().getText().replaceAll("\\s+","");
+    }
+
+    private boolean isChanged(){
+        String holder = txtArea.getTextArea().getText();
+        String newHolder = holder.replaceAll("\\s+","");
+        return (!newHolder.equals(oldTextArea)? true : false);
+    }
+
     private void newMenuOption(){
         int response = JOptionPane.CANCEL_OPTION;
         if(!isEmpty()){
@@ -101,10 +111,11 @@ public class FileMenuBar {
     }
 
     private void openMenuOption(){
-        int response = JOptionPane.YES_OPTION;
-        if(txtArea.isChanged()){
+        int response;
+        if(isChanged()){
             response = JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to " + jfrm.getTitle() + "?",
                     "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
+            System.out.print(response);
             if(response == JOptionPane.YES_OPTION){
                 saveDoesAll();
                 txtArea.getTextArea().setText("");
@@ -123,6 +134,7 @@ public class FileMenuBar {
         int result = jfc.showOpenDialog(null);
         if(result == JFileChooser.APPROVE_OPTION){
             File file = jfc.getSelectedFile();
+            saveOld();
             if(file.getName().endsWith(".java") || file.getName().endsWith(".txt")) {
                 loadFileForOpenMenu(file);
             }else {
@@ -148,6 +160,7 @@ public class FileMenuBar {
     private void saveAsMenuOption(){
         //need to check for overwriting
 
+        //create new text area object
 
         saveDoesAll();
     }

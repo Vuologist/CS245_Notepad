@@ -1,19 +1,15 @@
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.View;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.io.*;
 
 public class NotepadMenuBar {
 
     private JMenuBar jmbMAIN;
     private JFrame jfrm;
     private TextArea txtArea;
+
     public NotepadMenuBar(JFrame jfrm, TextArea textArea){
         this.jfrm = jfrm;
         txtArea = textArea;
+
         jmbMAIN = new JMenuBar();
 
         FileMenuBar fiM = new FileMenuBar(jfrm, txtArea);

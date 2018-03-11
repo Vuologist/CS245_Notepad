@@ -22,6 +22,7 @@ public class HelpMenuBar {
     private void helpMenuItems(){
 
         JMenuItem jmiViewHelp = new JMenuItem("View Help",'H');
+        jmiViewHelp.setEnabled(false);
         JMenuItem jmiAboutJNotepad = new JMenuItem("About JNotepad");
 
         helpJM.add(jmiViewHelp);
