@@ -1,10 +1,12 @@
 import javax.swing.*;
+import java.awt.*;
 
 public class FormatMenuBar {
 
     private JFrame jfrm;
     private TextArea txtArea;
     private JMenu formatJM;
+    private JFontChooser jFontChooser;
     private boolean wordWrapToggle = false;
 
     public FormatMenuBar(JFrame jfrm, TextArea txtArea){
@@ -31,6 +33,10 @@ public class FormatMenuBar {
             wordWrap();
 
         });
+
+        jmiFont.addActionListener(ae -> {
+            fontChooser();
+        });
     }
 
     private void wordWrap(){
@@ -48,5 +54,16 @@ public class FormatMenuBar {
         }
     }
 
+    private void fontChooser(){
+        jFontChooser = new JFontChooser();
+        jFontChooser.showDialog(jfrm);
+        Font font = jFontChooser.getFont();
+        Color color = jFontChooser.getColor();
+
+        txtArea.getTextArea().setFont(font);
+        txtArea.getTextArea().setForeground(color);
+
+        //slight error doesn't save changes
+    }
 
 }
