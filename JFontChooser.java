@@ -59,8 +59,6 @@ public class JFontChooser {
         oldFont = selectedFont;
         oldColor = selectedColor;
 
-        //System.out.println("Font: " + selectedFont.getFamily() + "\tStyle: " + selectedFont.getStyle() + "\tSize: " + selectedFont.getSize());
-        //set "default"
         jlSampleTxt.setFont(new Font(selectedFont.getFamily(), selectedFont.getStyle(), selectedFont.getSize()));
         jlSampleTxt.setForeground(selectedColor);
 
@@ -303,5 +301,4 @@ public class JFontChooser {
 
         return jpln;
     }
-
 }

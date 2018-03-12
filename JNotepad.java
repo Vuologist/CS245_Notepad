@@ -13,7 +13,7 @@ public class JNotepad {
         ImageIcon icon = new ImageIcon("JNotepad.png");
         jfrm.setIconImage(icon.getImage());
 
-        TextArea txtArea = new TextArea(jfrm, "Untitled");
+        TextArea txtArea = new TextArea(jfrm);
         NotepadMenuBar menuBar = new NotepadMenuBar(jfrm, txtArea);
         jfrm.setJMenuBar(menuBar.getNotepadMenu());
 

@@ -123,7 +123,6 @@ public class FileMenuBar {
         if(isChanged()){
             response = JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to " + jfrm.getTitle() + "?",
                     "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
-            //System.out.print(response);
             if(response == JOptionPane.YES_OPTION){
                 saveDoesAll();
             } else if (response == JOptionPane.NO_OPTION){
@@ -236,9 +235,7 @@ public class FileMenuBar {
                 return;
             }
         }
-
         jfrm.dispose();
         System.exit(0);
     }
-
 }

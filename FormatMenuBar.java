@@ -15,6 +15,7 @@ public class FormatMenuBar {
         formatJM = new JMenu("Format");
         formatJM.setMnemonic('o');
 
+        jFontChooser = new JFontChooser();
         formatMenuItems();
     }
 
@@ -43,12 +44,10 @@ public class FormatMenuBar {
     private void wordWrap(){
 
         if(wordWrapToggle == false){
-            System.out.println(wordWrapToggle);
             txtArea.getTextArea().setLineWrap(true);
             txtArea.getTextArea().setWrapStyleWord(true);
             wordWrapToggle = true;
         } else {
-            System.out.println(wordWrapToggle);
             txtArea.getTextArea().setLineWrap(false);
             txtArea.getTextArea().setWrapStyleWord(false);
             wordWrapToggle = false;
@@ -56,15 +55,12 @@ public class FormatMenuBar {
     }
 
     private void fontChooser(){
-        jFontChooser = new JFontChooser();
         jFontChooser.showDialog(jfrm);
         Font font = jFontChooser.getFont();
         Color color = jFontChooser.getColor();
 
         txtArea.getTextArea().setFont(font);
         txtArea.getTextArea().setForeground(color);
-
-        //slight error doesn't save changes
     }
 
 }

@@ -35,7 +35,6 @@ public class HelpMenuBar {
     }
 
     private void aboutJNotepad(){
-        JOptionPane.showMessageDialog(jfrm, "(c) Anthony Vu");
+        JOptionPane.showMessageDialog(jfrm, "(C) Anthony Vu");
     }
-
 }

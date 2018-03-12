@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
@@ -191,7 +190,6 @@ public class EditMenuBar {
         jdlg.add(buttonGroup, BorderLayout.EAST);
         jdlg.add(caseAndDirection, BorderLayout.SOUTH);
 
-
         jbtnFindNext.addActionListener(ae -> {
             findNext(jtfFind.getText());
         });
@@ -222,7 +220,6 @@ public class EditMenuBar {
 
     private void findNext(String keyword){
         String holder = txtArea.getTextArea().getText();
-        //String currentString = keyword;
 
         if (!caseSens) {
             keyword = keyword.toLowerCase();
@@ -253,5 +250,4 @@ public class EditMenuBar {
             }
         }
     }
-
 }
