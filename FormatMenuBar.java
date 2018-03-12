@@ -23,13 +23,14 @@ public class FormatMenuBar {
     }
 
     private void formatMenuItems (){
-        JMenuItem jmiWordWrap = new JMenuItem("Word Wrap", 'W');
+        JCheckBox jmiWordWrap = new JCheckBox("Word Wrap");
+        jmiWordWrap.setMnemonic('W');
         JMenuItem jmiFont = new JMenuItem("Font...", 'F');
 
         formatJM.add(jmiWordWrap);
         formatJM.add(jmiFont);
 
-        jmiWordWrap.addActionListener(ae -> {
+        jmiWordWrap.addItemListener(ae -> {
             wordWrap();
 
         });

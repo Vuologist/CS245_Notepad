@@ -201,6 +201,7 @@ public class FileMenuBar {
 
     private void exitMenuOption(){
         //might want to do stuff here
+        //definely need more code
         System.out.println("exit caught");
     }
 

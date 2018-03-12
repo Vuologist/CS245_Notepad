@@ -1,8 +1,10 @@
 import javax.swing.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class EditMenuBar {
 
@@ -10,7 +12,9 @@ public class EditMenuBar {
     private TextArea txtArea;
     private JMenu editJM;
     private JPopupMenu rightClickMenu;
-
+    //true = up, false = down
+    private boolean upOrDown = false;
+    private boolean caseSens = false;
 
     public EditMenuBar(JFrame jfrm, TextArea txtArea){
         this.jfrm = jfrm;
@@ -88,17 +92,31 @@ public class EditMenuBar {
             txtArea.getTextArea().replaceSelection("");
         });
 
+        jmiFind.addActionListener(ae -> {
+            findFunction();
+        });
+
         jmiSelectAll.addActionListener(ae -> {
             txtArea.getTextArea().selectAll();
         });
 
+        jmiTimeDate.addActionListener(ae -> {
+            addTimeAndDate();
+        });
+
         txtArea.getTextArea().addMouseListener(new MouseAdapter() {
             @Override
+            public void mousePressed(MouseEvent e) {
+                if(e.isPopupTrigger())
+                    rightClickMenu.show(e.getComponent(),e.getX(),e.getY());
+            }
+
+            @Override
             public void mouseReleased(MouseEvent e) {
-                rightClickMenu.show(e.getComponent(), e.getX(), e.getY());
+                if(e.isPopupTrigger())
+                    rightClickMenu.show(e.getComponent(), e.getX(), e.getY());
             }
         });
-        
     }
 
     private void generateJPopupMenu(){
@@ -121,6 +139,114 @@ public class EditMenuBar {
         jmiRightPaste.addActionListener(ae -> {
             txtArea.getTextArea().paste();
         });
+    }
+
+    private void addTimeAndDate(){
+        Date dNow = new Date();
+        SimpleDateFormat ft = new SimpleDateFormat("hh:mm a M/dd/yyyy");
+        txtArea.getTextArea().insert(ft.format(dNow),txtArea.getTextArea().getCaretPosition());
+    }
+
+    private void findFunction(){
+        JDialog jdlg = new JDialog(jfrm,"Find", false);
+        jdlg.setSize(300, 135);
+        jdlg.setLayout(new BorderLayout());
+
+        JLabel jlbFindWhat = new JLabel("Find what: ");
+        JTextField jtfFind = new JTextField(50);
+        JCheckBox matchCase = new JCheckBox("Match case");
+
+        JPanel buttonGroup = new JPanel();
+        buttonGroup.setLayout(new BorderLayout());
+        JButton jbtnFindNext = new JButton("Find Next");
+        JButton jbtnCancel = new JButton("Cancel");
+        buttonGroup.add(jbtnFindNext, BorderLayout.NORTH);
+        buttonGroup.add(jbtnCancel, BorderLayout.SOUTH);
+
+        JPanel jUpOrDown = new JPanel();
+        jUpOrDown.setLayout(new BorderLayout());
+        JRadioButton jrbUp = new JRadioButton("Up");
+        JRadioButton jrbDown = new JRadioButton("Down", true);
+        ButtonGroup group = new ButtonGroup();
+        group.add(jrbUp);
+        group.add(jrbDown);
+        jUpOrDown.add(jrbUp, BorderLayout.WEST);
+        jUpOrDown.add(jrbDown, BorderLayout.EAST);
+        TitledBorder title = BorderFactory.createTitledBorder("Direction");
+        jUpOrDown.setBorder(title);
+
+        JPanel caseAndDirection = new JPanel();
+        caseAndDirection.setLayout(new BorderLayout());
+        caseAndDirection.add(matchCase, BorderLayout.WEST);
+        caseAndDirection.add(jUpOrDown, BorderLayout.EAST);
+
+        //main dialog
+        jdlg.add(jlbFindWhat, BorderLayout.WEST);
+        jdlg.add(jtfFind, BorderLayout.CENTER);
+        jdlg.add(buttonGroup, BorderLayout.EAST);
+        jdlg.add(caseAndDirection, BorderLayout.SOUTH);
+
+
+        jbtnFindNext.addActionListener(ae -> {
+            findNext(jtfFind.getText());
+        });
+
+        jbtnCancel.addActionListener(ae -> {
+            jdlg.dispose();
+        });
+
+        matchCase.addItemListener(il -> {
+            if(caseSens == false)
+                caseSens = true;
+            else
+                caseSens = false;
+            System.out.print(caseSens);
+        });
+
+        jrbUp.addItemListener(il -> {
+            upOrDown = true;
+        });
+
+        jrbDown.addItemListener(il -> {
+            upOrDown = false;
+        });
+
+        jdlg.setLocationRelativeTo(jfrm);
+        jdlg.setVisible(true);
+    }
+
+    private void findNext(String keyword){
+        String holder = txtArea.getTextArea().getText();
+        String currentString = keyword;
+
+        if (!caseSens) {
+            keyword = keyword.toLowerCase();
+            holder = holder.toLowerCase();
+        }
+        int index;
+        int last = keyword.length();
+        if (upOrDown) {
+            if (txtArea.getTextArea().getSelectedText()!=null && txtArea.getTextArea().getSelectedText().equalsIgnoreCase(keyword)) {
+                index = holder.substring(0, txtArea.getTextArea().getCaretPosition()-keyword.length()).lastIndexOf(keyword);}
+            else {
+                index = holder.substring(0, txtArea.getTextArea().getCaretPosition()).lastIndexOf(keyword);
+            }
+            if (index!=-1) {
+                int indexhold = index;
+                int lasthold = index+last;
+                txtArea.getTextArea().select(indexhold, lasthold);
+            }else {
+                JOptionPane.showMessageDialog(jfrm, "Can't find any more");
+            }
+
+        } else {
+            index = holder.substring(txtArea.getTextArea().getCaretPosition(),holder.length()).indexOf(keyword);
+            if (index!=-1) {
+                txtArea.getTextArea().select(txtArea.getTextArea().getCaretPosition()+index, txtArea.getTextArea().getCaretPosition()+index+last);
+            } else {
+                JOptionPane.showMessageDialog(jfrm, "Can't find any more");
+            }
+        }
     }
 
 }
