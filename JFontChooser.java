@@ -6,16 +6,14 @@ import java.awt.*;
 
 //
 // Name: Vu, Anthony
-// Project: 2
-// Due: 3/7/2018
+// Project: 3
+// Due: 3/12/2018
 // Course: CS-245-01-w18
 //
 // Description:
-// This class is responsible for generating the JDialog that
-// will allow the user to select Font, Style, and Size. The
-// is allowed to select any option from the list provided.
-// This will then trigger a listner to update the sample text
-// with the appropriate settings that the user selected.
+// The requirements of this project include recreating Windows
+// Notepad and adding in a color chooser for the foreground
+// text.
 //
 
 public class JFontChooser {
@@ -221,22 +219,16 @@ public class JFontChooser {
         JScrollPane jscrlp = new JScrollPane(jlst);
 
         JLabel jlStyle = new JLabel("Style:");
-        //JTextField jtStyle = new JTextField(10);
-
 
         jlst.setSelectedValue(fontsStyles[selectedFont.getStyle()], true);
-        //jtStyle.setText(fontsStyles[selectedFont.getStyle()]);
 
-        //jtStyle.setEnabled(false);
         JPanel jpln = new JPanel();
         jpln.setLayout(new BorderLayout());
         jpln.add(jlStyle, BorderLayout.NORTH);
-        //jpln.add(jtStyle, BorderLayout.CENTER);
         jpln.add(jscrlp, BorderLayout.SOUTH);
 
         jlst.addListSelectionListener((ListSelectionEvent le) ->{
             String style = jlst.getSelectedValue().toString();
-            //jtStyle.setText(style);
             setNewStyle(style);
         });
 
@@ -258,7 +250,6 @@ public class JFontChooser {
 
         selectedFont = new Font(selectedFont.getFamily(), holder, selectedFont.getSize());
         jlSampleTxt.setFont(selectedFont);
-        //System.out.println(style);
     }
 
 
@@ -273,28 +264,16 @@ public class JFontChooser {
         JScrollPane jscrlp = new JScrollPane(jlst);
 
         JLabel jlSize = new JLabel("Size:");
-        //JTextField jtSize = new JTextField(10);
 
         jlst.setSelectedValue(String.valueOf(selectedFont.getSize()), true);
-        //jtSize.setText(String.valueOf(selectedFont.getSize()));
 
-        //jtSize.setEditable(false);
         JPanel jpln = new JPanel();
         jpln.setLayout(new BorderLayout());
         jpln.add(jlSize, BorderLayout.NORTH);
-        //jpln.add(jtSize, BorderLayout.CENTER);
         jpln.add(jscrlp, BorderLayout.SOUTH);
-
-        /*
-        jtSize.addActionListener(ae -> {
-            int size = Integer.valueOf(ae.getActionCommand());
-            selectedFont = new Font(selectedFont.getFamily(), selectedFont.getStyle(), size);
-            jlSampleTxt.setFont(selectedFont);
-        }); */
 
         jlst.addListSelectionListener((ListSelectionEvent le) ->{
             int size = Integer.valueOf(jlst.getSelectedValue().toString());
-            //jtSize.setText(jlst.getSelectedValue().toString());
             selectedFont = new Font(selectedFont.getFamily(), selectedFont.getStyle(), size);
             jlSampleTxt.setFont(selectedFont);
         });

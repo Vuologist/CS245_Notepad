@@ -1,6 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
 
+//
+// Name: Vu, Anthony
+// Project: 3
+// Due: 3/12/2018
+// Course: CS-245-01-w18
+//
+// Description:
+// The requirements of this project include recreating Windows
+// Notepad and adding in a color chooser for the foreground
+// text.
+//
+
 public class JNotepad {
 
     private JFrame jfrm;
