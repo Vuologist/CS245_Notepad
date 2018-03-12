@@ -6,7 +6,7 @@ public class JNotepad {
     private JFrame jfrm;
 
     public JNotepad(){
-        jfrm = new JFrame ("Untitled-Notepad");
+        jfrm = new JFrame ("Untitled");
         jfrm.setSize(650,325);
         jfrm.setLayout(new BorderLayout());
         jfrm.setDefaultCloseOperation(jfrm.EXIT_ON_CLOSE);

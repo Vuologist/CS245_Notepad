@@ -33,7 +33,7 @@ public class JFontChooser {
 
     public JFontChooser(){
         defaultColor = new Color(0, 0, 0);
-        defaultFont = new Font("Courier",Font.PLAIN,12);
+        defaultFont = new Font("Courier New",Font.PLAIN,12);
         selectedColor = defaultColor;
         selectedFont = defaultFont;
     }

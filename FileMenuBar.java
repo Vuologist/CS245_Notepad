@@ -11,6 +11,8 @@ public class FileMenuBar {
     private String oldTextArea;
     private JFileChooser jfc;
     private JMenu fileJM;
+    private File oldFile;
+    private boolean saveAsFlag = false;
 
     public FileMenuBar(JFrame jfrm, TextArea txtArea){
         this.jfrm = jfrm;
@@ -37,7 +39,9 @@ public class FileMenuBar {
         JMenuItem jmiSaveAs = new JMenuItem("Save As...");
         //second section
         JMenuItem jmiPageSetup = new JMenuItem("Page Setup...", 'u');
+        jmiPageSetup.setEnabled(false);
         JMenuItem jmiPrint = new JMenuItem("Print...");
+        jmiPrint.setEnabled(false);
         jmiPrint.setAccelerator(KeyStroke.getKeyStroke('P', InputEvent.CTRL_DOWN_MASK));
         //third section
         JMenuItem jmiExit = new JMenuItem("Exit",'x');
@@ -51,7 +55,7 @@ public class FileMenuBar {
         });
 
         jmiSave.addActionListener(ae -> {
-            //add code
+            saveMenuOption();
         });
 
         jmiSaveAs.addActionListener(ae -> {
@@ -91,21 +95,25 @@ public class FileMenuBar {
     }
 
     private boolean isChanged(){
-        String holder = txtArea.getTextArea().getText();
-        String newHolder = holder.replaceAll("\\s+","");
-        return (!newHolder.equals(oldTextArea)? true : false);
+        String currentTextArea = txtArea.getTextArea().getText();
+        String currrentTextAreaNoSpace = currentTextArea.replaceAll("\\s+","");
+        return (!currrentTextAreaNoSpace.equals(oldTextArea)? true : false);
     }
 
     private void newMenuOption(){
         int response = JOptionPane.CANCEL_OPTION;
         if(!isEmpty()){
-            response = JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to Untitled?",
+            response = JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to " + jfrm.getTitle() + "?",
                     "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
             if(response == JOptionPane.YES_OPTION){
                 saveDoesAll();
                 txtArea.getTextArea().setText("");
+                saveOld();
+                jfrm.setTitle("Untitled");
             } else if (response == JOptionPane.NO_OPTION){
                 txtArea.getTextArea().setText("");
+                saveOld();
+                jfrm.setTitle("Untitled");
             }
         }
     }
@@ -115,10 +123,9 @@ public class FileMenuBar {
         if(isChanged()){
             response = JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to " + jfrm.getTitle() + "?",
                     "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
-            System.out.print(response);
+            //System.out.print(response);
             if(response == JOptionPane.YES_OPTION){
                 saveDoesAll();
-                txtArea.getTextArea().setText("");
             } else if (response == JOptionPane.NO_OPTION){
                 response = JOptionPane.YES_OPTION;
             }else {
@@ -127,21 +134,23 @@ public class FileMenuBar {
         }
 
         jfc = new JFileChooser();
+        jfc.setDialogTitle("Open...");
         FileNameExtensionFilter txtFilter = new FileNameExtensionFilter("*.txt", "txt");
         FileNameExtensionFilter javaFilter = new FileNameExtensionFilter("*.java", "java");
         jfc.addChoosableFileFilter(javaFilter);
         jfc.setFileFilter(txtFilter);
         int result = jfc.showOpenDialog(null);
         if(result == JFileChooser.APPROVE_OPTION){
+            txtArea.getTextArea().setText("");
             File file = jfc.getSelectedFile();
-            saveOld();
             if(file.getName().endsWith(".java") || file.getName().endsWith(".txt")) {
                 loadFileForOpenMenu(file);
+                oldFile = file;
+                saveOld();
             }else {
                 JOptionPane.showMessageDialog(jfrm, "File is not .txt or .java!!", "Error", JOptionPane.WARNING_MESSAGE);
             }
-        } else
-            System.out.println("nothing selected");
+        }
     }
 
     private void loadFileForOpenMenu(File file){
@@ -158,40 +167,54 @@ public class FileMenuBar {
     }
 
     private void saveAsMenuOption(){
-        //need to check for overwriting
-
-        //create new text area object
-
+        saveAsFlag = true;
         saveDoesAll();
     }
 
+    private void saveMenuOption(){
+        saveDoesAll();
+        saveOld();
+    }
+
     private void saveDoesAll(){
-        jfc = new JFileChooser();
-        FileNameExtensionFilter txtFilter = new FileNameExtensionFilter("*.txt", "txt");
-        FileNameExtensionFilter javaFilter = new FileNameExtensionFilter("*.java", "java");
-        jfc.addChoosableFileFilter(javaFilter);
-        jfc.setFileFilter(txtFilter);
-        jfc.setApproveButtonText("Save");
-        int result = jfc.showOpenDialog(null);
-        if(result != jfc.APPROVE_OPTION){
-            return;
-        }
+        File file;
 
-        File file = jfc.getSelectedFile();
-
-        if (file.exists()) {
-            int response = JOptionPane.showConfirmDialog(null,
-                    "Do you want to replace the existing file?",
-                    "Confirm", JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
-            if (response != JOptionPane.YES_OPTION) {
+        if(jfrm.getTitle() == "Untitled" || saveAsFlag == true) {
+            jfc = new JFileChooser();
+            jfc.setDialogTitle("Save As");
+            FileNameExtensionFilter txtFilter = new FileNameExtensionFilter(".txt", "txt");
+            FileNameExtensionFilter javaFilter = new FileNameExtensionFilter(".java", "java");
+            jfc.addChoosableFileFilter(javaFilter);
+            jfc.setFileFilter(txtFilter);
+            jfc.setApproveButtonText("Save");
+            int result = jfc.showOpenDialog(null);
+            if(result != jfc.APPROVE_OPTION){
                 return;
             }
-        }
 
+            file = jfc.getSelectedFile();
+            String filePath = file.getAbsolutePath();
+            if(!filePath.endsWith("txt") || !filePath.endsWith("java")) {
+                file = new File(filePath + jfc.getFileFilter().getDescription());
+            }
+
+            if (file.exists()) {
+                int response = JOptionPane.showConfirmDialog(null,
+                        "Do you want to replace the existing file?",
+                        "Confirm", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                if (response != JOptionPane.YES_OPTION) {
+                    return;
+                }
+            }
+
+            saveAsFlag = false;
+        } else{
+            file = oldFile;
+        }
+        jfrm.setTitle(file.getName());
         try {
             BufferedWriter outFile = new BufferedWriter(new FileWriter(file));
-
             txtArea.getTextArea().write(outFile);
             outFile.close();
         } catch (IOException ex) {
@@ -200,9 +223,22 @@ public class FileMenuBar {
     }
 
     private void exitMenuOption(){
-        //might want to do stuff here
-        //definely need more code
-        System.out.println("exit caught");
+        int response;
+        if(isChanged()){
+            response = JOptionPane.showConfirmDialog(jfrm,"Do you want to save changes to " + jfrm.getTitle() + "?",
+                    "Notepad", JOptionPane.YES_NO_CANCEL_OPTION);
+            //System.out.print(response);
+            if(response == JOptionPane.YES_OPTION){
+                saveDoesAll();
+            } else if (response == JOptionPane.NO_OPTION){
+                response = JOptionPane.YES_OPTION;
+            }else {
+                return;
+            }
+        }
+
+        jfrm.dispose();
+        System.exit(0);
     }
 
 }

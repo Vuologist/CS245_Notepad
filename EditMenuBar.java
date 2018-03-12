@@ -15,6 +15,7 @@ public class EditMenuBar {
     //true = up, false = down
     private boolean upOrDown = false;
     private boolean caseSens = false;
+    private JButton jbtnFindNext;
 
     public EditMenuBar(JFrame jfrm, TextArea txtArea){
         this.jfrm = jfrm;
@@ -96,6 +97,10 @@ public class EditMenuBar {
             findFunction();
         });
 
+        jmiFindNext.addActionListener(ae -> {
+            jbtnFindNext.doClick();
+        });
+
         jmiSelectAll.addActionListener(ae -> {
             txtArea.getTextArea().selectAll();
         });
@@ -158,7 +163,7 @@ public class EditMenuBar {
 
         JPanel buttonGroup = new JPanel();
         buttonGroup.setLayout(new BorderLayout());
-        JButton jbtnFindNext = new JButton("Find Next");
+        jbtnFindNext = new JButton("Find Next");
         JButton jbtnCancel = new JButton("Cancel");
         buttonGroup.add(jbtnFindNext, BorderLayout.NORTH);
         buttonGroup.add(jbtnCancel, BorderLayout.SOUTH);
@@ -217,7 +222,7 @@ public class EditMenuBar {
 
     private void findNext(String keyword){
         String holder = txtArea.getTextArea().getText();
-        String currentString = keyword;
+        //String currentString = keyword;
 
         if (!caseSens) {
             keyword = keyword.toLowerCase();
